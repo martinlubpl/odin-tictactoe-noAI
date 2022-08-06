@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');
+
+body {
+    padding: 0;
+    margin: 0;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+header {
+    text-align: center;
+    font-family: 'Audiowide', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 4em;
+    background: linear-gradient(to bottom, #831cf1 0%, #1685fc 100%);
+    padding: 2rem;
+    color: white;
+    
+}
+main {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 150px);
+    grid-template-rows: repeat(3, 150px);
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.field {
+    background-color: #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Audiowide', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 5rem;
+    color: rgb(18, 115, 147);
+    
+}
+
+.input-names {
+    position: absolute;
+    top: 0;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    gap: 1rem;
+}
+.input-names button {
+    padding: 1rem;
+    border-radius: 10px;
+    background: linear-gradient(to bottom, #831cf1 30%, #1685fc 100%);
+    color: white;
+}
+
+
+
+.info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Audiowide', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 2rem;
+    margin-top: 2rem;
+    color: #1685fc;
+}
+
+.hidden {
+    display: none;
+}
