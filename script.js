@@ -108,10 +108,36 @@ const gameController = (player1, player2) => {
             if (Gameboard.getField(fieldIndex) == '') {
                 Gameboard.setField(fieldIndex, currentPlayer.sign);
                 displayController.renderBoard();
-                //todo:check win
+                let moveResult = checkWin();
+                console.log(moveResult);
             }
         }
     });
+
+    const checkWin = () => {
+        let result = false;
+        const winningFields = [
+            [0, 1, 2], //rows
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6], // columns
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8], // diagonals
+            [2, 4, 6],
+        ];
+        winningFields.forEach((fieldsArr) => {
+            if (Gameboard.getField(fieldsArr[0]) == currentPlayer.sign && Gameboard.getField(fieldsArr[1]) == currentPlayer.sign && Gameboard.getField(fieldsArr[2]) == currentPlayer.sign) {
+                result = "win";
+            }
+        })
+
+        if (!result) {
+            // todo no win, check for tie 
+        }
+
+        return result;
+    }
 
 }; // dont call it yet (no IIFE)
 
