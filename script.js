@@ -58,6 +58,10 @@ const displayController = (() => {
         board.classList.remove("hidden");
         inputNames.classList.add("hidden");
         info.classList.remove("hidden");
+        // dataset.index [data-index] for fields
+        fields.forEach((field, index) => {
+            field.dataset.index = index;
+        })
         resetBoard()
     }
 
@@ -95,5 +99,19 @@ const gameController = (player1, player2) => {
     currentPlayer = player1;
     displayController.setNames(player1.name, player2.name);
     displayController.setMessage(`${currentPlayer.name}'s turn`);
+
+    //event delegation DRY
+    // todo: move to displayController  
+    displayController.board.addEventListener('click', (e) => {
+        if (e.target.classList.contains('field')) {
+            const fieldIndex = e.target.dataset.index;
+            if (Gameboard.getField(fieldIndex) == '') {
+                Gameboard.setField(fieldIndex, currentPlayer.sign);
+                displayController.renderBoard();
+                //todo:check win
+            }
+        }
+    });
+
 }; // dont call it yet (no IIFE)
 
