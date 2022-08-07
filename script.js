@@ -44,6 +44,17 @@ const displayController = (() => {
     const p1points = document.querySelector(".player1-score .score");
     const p2points = document.querySelector(".player2-score .score");
     const message = document.querySelector(".message");
+    const resetBtn = document.querySelector("#play-again");
+    
+
+    resetBtn.addEventListener('click', () => {
+        Gameboard.resetBoard();
+        renderBoard();
+        hideReset();
+        console.log(gameController);
+        // gameController.startGame();
+        newgame.startGame();
+    })
 
     const startGame = () => {
         console.log("start game");
@@ -98,18 +109,22 @@ const displayController = (() => {
         p1points.innerHTML = points1;
         p2points.innerHTML = points2;
     }
+    const showReset = () => {
+        resetBtn.classList.remove("hidden");
+    }
+    const hideReset = () => {
+        resetBtn.classList.add("hidden");
+    }
 
     startBtn.addEventListener('click', startGame);
-    return { startBtn, pl1Input, pl2Input, board, inputNames, initDisplay, setNames, resetBoard, renderBoard, setMessage, updatePoints };
+    return { startBtn, pl1Input, pl2Input, board, inputNames, initDisplay, setNames, resetBoard, renderBoard, setMessage, updatePoints,showReset };
 })();
 // console.log(displayController);
 
 // GAME LOGIC
 const gameController = (player1, player2) => {
-    currentPlayer = player1;
+    
     displayController.setNames(player1.name, player2.name);
-    displayController.setMessage(`${currentPlayer.name}'s turn`);
-
     //event delegation DRY
     const handleFieldClick = (e) => {
         if (e.target.classList.contains('field')) {
@@ -124,20 +139,32 @@ const gameController = (player1, player2) => {
                 if (!moveResult) {
                     changePlayer();
                     displayController.setMessage(`${currentPlayer.name}'s turn`);
+                //tie (finished)
                 } else if (moveResult == 'tie') {
                     displayController.setMessage('It\'s a Tie');
+                    displayController.showReset();
+                //win (finished)
                 } else {
                     displayController.setMessage(`${currentPlayer.name} wins!`);
                     disableFields();
                     currentPlayer.points++;
                     displayController.updatePoints(player1.points, player2.points);
+                    displayController.showReset();
                 }
             }
         }
     }
     
-    // todo: move to displayController  
-    displayController.board.addEventListener('click', handleFieldClick);
+    
+    
+    
+    const startGame = () => {
+        // todo: change to random player ??
+        currentPlayer = player1;
+        displayController.setMessage(`${currentPlayer.name}'s turn`);
+        // todo: move to displayController  
+        displayController.board.addEventListener('click', handleFieldClick);
+    }
 
 
     const checkWin = () => {
@@ -178,5 +205,9 @@ const gameController = (player1, player2) => {
     const disableFields = () => {
         displayController.board.removeEventListener('click', handleFieldClick);
     }
+
+    startGame();
+
+    return { startGame };
 }; // dont call it yet (no IIFE), wait for names
 
