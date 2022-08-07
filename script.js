@@ -22,8 +22,12 @@ const Gameboard = (() => {
         board.fill("", 0, 9)
         // console.log(board);
     }
+    const checkTie = () => {
+        return !board.includes('');
+    }
 
-    return { setField, getField, resetBoard }
+
+    return { setField, getField, resetBoard, checkTie }
 })()
 
 // DISPLAY
@@ -37,6 +41,8 @@ const displayController = (() => {
     const info = document.querySelector(".info");
     const p1name = document.querySelector(".p1name");
     const p2name = document.querySelector(".p2name");
+    const p1points = document.querySelector(".player1-score .score");
+    const p2points = document.querySelector(".player2-score .score");
     const message = document.querySelector(".message");
 
     const startGame = () => {
@@ -88,9 +94,13 @@ const displayController = (() => {
     const setMessage = (txt) => {
         message.innerHTML = txt;
     }
+    const updatePoints = (points1, points2) => {
+        p1points.innerHTML = points1;
+        p2points.innerHTML = points2;
+    }
 
     startBtn.addEventListener('click', startGame);
-    return { startBtn, pl1Input, pl2Input, board, inputNames, initDisplay, setNames, resetBoard, renderBoard, setMessage };
+    return { startBtn, pl1Input, pl2Input, board, inputNames, initDisplay, setNames, resetBoard, renderBoard, setMessage, updatePoints };
 })();
 // console.log(displayController);
 
@@ -101,8 +111,7 @@ const gameController = (player1, player2) => {
     displayController.setMessage(`${currentPlayer.name}'s turn`);
 
     //event delegation DRY
-    // todo: move to displayController  
-    displayController.board.addEventListener('click', (e) => {
+    const handleFieldClick = (e) => {
         if (e.target.classList.contains('field')) {
             const fieldIndex = e.target.dataset.index;
             if (Gameboard.getField(fieldIndex) == '') {
@@ -110,9 +119,26 @@ const gameController = (player1, player2) => {
                 displayController.renderBoard();
                 let moveResult = checkWin();
                 console.log(moveResult);
+                
+                // game not finished
+                if (!moveResult) {
+                    changePlayer();
+                    displayController.setMessage(`${currentPlayer.name}'s turn`);
+                } else if (moveResult == 'tie') {
+                    displayController.setMessage('It\'s a Tie');
+                } else {
+                    displayController.setMessage(`${currentPlayer.name} wins!`);
+                    disableFields();
+                    currentPlayer.points++;
+                    displayController.updatePoints(player1.points, player2.points);
+                }
             }
         }
-    });
+    }
+    
+    // todo: move to displayController  
+    displayController.board.addEventListener('click', handleFieldClick);
+
 
     const checkWin = () => {
         let result = false;
@@ -133,11 +159,24 @@ const gameController = (player1, player2) => {
         })
 
         if (!result) {
-            // todo no win, check for tie 
+            // todo: no win, check for tie
+            if (Gameboard.checkTie()) {
+                result = "tie";
+            }
         }
 
-        return result;
+        return result; // returns win, tie or false
     }
-
-}; // dont call it yet (no IIFE)
+    const changePlayer = () => {
+        if (currentPlayer == player1) {
+            currentPlayer = player2;
+        } else {
+            currentPlayer = player1;
+        }
+    }
+    //disable fields after win
+    const disableFields = () => {
+        displayController.board.removeEventListener('click', handleFieldClick);
+    }
+}; // dont call it yet (no IIFE), wait for names
 

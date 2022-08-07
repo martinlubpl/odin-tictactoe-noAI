@@ -48,7 +48,7 @@ main {
     align-content: center;
     gap: 1rem;
 }
-.input-names button {
+.input-names button, #play-again button {
     padding: 1rem;
     border-radius: 10px;
     background: linear-gradient(to bottom, #831cf1 30%, #1685fc 100%);
@@ -65,6 +65,13 @@ main {
     font-size: 2rem;
     margin-top: 2rem;
     color: #1685fc;
+}
+.info .message {
+    margin-top: 1rem;
+}
+
+.info>.score {
+    margin-top: 2rem;
 }
 
 .hidden {
